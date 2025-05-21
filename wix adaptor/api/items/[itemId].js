@@ -1,19 +1,17 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_KEY
-);
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
 export default async function handler(req, res) {
   const { itemId } = req.query;
 
   const { data, error } = await supabase
-    .from('products')
+    .from('WixTest')
     .select('*')
-    .eq('id', itemId)
+    .eq('uid', itemId)
     .single();
 
-  if (error) return res.status(500).json({ error });
-  res.json({ item: { _id: data.id, ...data } });
+  if (error || !data) return res.status(404).json({ error: 'Item not found' });
+
+  res.json({ item: { _id: data.uid, ...data } });
 }
