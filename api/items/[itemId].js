@@ -3,7 +3,13 @@ import { createClient } from '@supabase/supabase-js';
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
 export default async function handler(req, res) {
-  if (req.headers['x-wix-secret'] !== process.env.DATABASE_SECRET) {
+  
+  console.log('🧪 Incoming headers:', req.headers);
+  
+  const receivedSecret =
+  req.headers['x-wix-secret'] || req.headers['X-Wix-Secret'];
+  
+  if (receivedSecret !== process.env.DATABASE_SECRET) {
     return res.status(403).json({ error: 'Unauthorized: Invalid Secret' });
   }
   
