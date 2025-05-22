@@ -1,3 +1,9 @@
+export const config = {
+    api: {
+      bodyParser: true
+    }
+  };
+  
 export default async function handler(req, res) {
     const receivedSecret = req.headers['x-wix-secret'] || req.headers['X-Wix-Secret'];
     if (receivedSecret !== process.env.DATABASE_SECRET) {
