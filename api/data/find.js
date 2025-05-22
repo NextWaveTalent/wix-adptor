@@ -8,7 +8,7 @@ export default async function handler(req, res) {
   // 日志输出 headers，便于调试
   console.log('🧪 Wix Headers:', req.headers);
 
-  const receivedSecret = req.headers['x-wix-secret'];
+  const receivedSecret = req.headers['x-wix-secret'] || req.headers['X-Wix-Secret'];
 
   if (receivedSecret !== process.env.DATABASE_SECRET) {
     console.log('⛔ Invalid secret:', receivedSecret, '| Expected:', process.env.DATABASE_SECRET);
