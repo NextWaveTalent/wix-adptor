@@ -4,7 +4,6 @@ const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY
 
 export default async function handler(req, res) {
 
-  console.log('🧪 Incoming headers:', req.headers);
   
   const receivedSecret =
   req.headers['x-wix-secret'] || req.headers['X-Wix-Secret'];
@@ -27,16 +26,21 @@ export default async function handler(req, res) {
 
   if (req.method === 'POST') {
     const { filter } = req.body;
-
-
-    const { data, error } = await supabase.from('WixTest').select('*');
+  
+    let query = supabase.from('WixTest').select('*');
+  
+    if (filter?.uid) {
+      query = query.eq('uid', filter.uid);
+    }
+  
+    const { data, error } = await query;
     if (error) return res.status(500).json({ error });
-
+  
     const items = data.map(item => ({
       _id: item.uid,
       ...item
     }));
-
+  
     return res.json({ items });
   }
 
