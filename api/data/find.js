@@ -6,7 +6,10 @@ const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY
 
 export default async function handler(req, res) {
   // 日志输出 headers，便于调试
-  console.log('🧪 Wix Headers:', req.headers);
+  console.log('🧪 Headers:', req.headers);
+  console.log('🧪 Received Secret:', req.headers['x-wix-secret']);
+  console.log('🔐 Expected Secret:', process.env.DATABASE_SECRET);
+
 
   const receivedSecret = req.headers['x-wix-secret'] || req.headers['X-Wix-Secret'];
 
