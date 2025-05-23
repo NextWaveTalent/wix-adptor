@@ -1,4 +1,5 @@
 export default async function handler(req, res) {
+    console.log('🔥 /schemas/find called')
     return res.json([
       {
         id: "WixTest_1",
