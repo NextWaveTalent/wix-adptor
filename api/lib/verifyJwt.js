@@ -1,23 +1,12 @@
 // lib/verifyJwt.js
-import jwt from 'jsonwebtoken';
-import jwksClient from 'jwks-rsa';
+import { createRemoteJWKSet, jwtVerify } from 'jose';
 
-const client = jwksClient({
-  jwksUri: 'https://www.wixapis.com/_api/app-jwks/discovery/keys'
-});
-
-function getKey(header, callback) {
-  client.getSigningKey(header.kid, (err, key) => {
-    const signingKey = key.getPublicKey();
-    callback(null, signingKey);
-  });
-}
+const jwks = createRemoteJWKSet(new URL('https://www.wixapis.com/_api/app-jwks/discovery/keys'));
 
 export async function verifyRequestToken(token) {
-  return new Promise((resolve, reject) => {
-    jwt.verify(token, getKey, { algorithms: ['RS256'] }, (err, decoded) => {
-      if (err) return reject(err);
-      resolve(decoded);
-    });
+  const { payload } = await jwtVerify(token, jwks, {
+    issuer: 'wix.com',
+    audience: process.env.WIX_APP_ID, // ⚠️ 请设置为你 App 的 ID
   });
+  return payload;
 }
