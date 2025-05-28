@@ -1,15 +1,16 @@
-import { verifyRequestToken } from '../../lib/verifyJwt';
+export const config = {
+  api: {
+    bodyParser: true
+  }
+};
 
 export default async function handler(req, res) {
-  console.log('🔥 schemas/find called');
+  console.log('🔥 /schemas/find called');
 
   try {
-    const token = req.body; // Wix sends the JWT in POST body
-    const decoded = await verifyRequestToken(token);
-
     return res.json([
       {
-        id: "@nextwavehostcenter/supabase.WixTest_1",
+        id: "@nextwavehostcenter/supabase.WixTest_1",  // 👈 确保与 extension namespace 一致
         displayName: "WixTest_1",
         fields: [
           { key: "_id", type: "text", isPrimary: true },
@@ -23,7 +24,7 @@ export default async function handler(req, res) {
       }
     ]);
   } catch (err) {
-    console.error("❌ JWT verify failed in /schemas/find", err);
-    return res.status(401).json({ error: 'Unauthorized' });
+    console.error("❌ schemas/find error:", err);
+    return res.status(500).json({ error: "Internal error" });
   }
 }
