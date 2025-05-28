@@ -2,7 +2,7 @@ export default async function handler(req, res) {
   console.log('🔥 /schemas/find called');
   return res.json([
     {
-      id: "WixTest_1", // ✅ 不能加 namespace
+      id: "@nextwavehostcenter/supabase.WixTest_1", // ✅ 不能加 namespace
       displayName: "WixTest_1",
       fields: [
         { key: "_id", type: "text", isPrimary: true },
