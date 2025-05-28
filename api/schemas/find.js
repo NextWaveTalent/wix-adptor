@@ -1,15 +1,8 @@
 export default async function handler(req, res) {
   console.log('🔥 /schemas/find called');
-
-  const receivedSecret = req.headers['x-wix-secret'];
-  if (receivedSecret !== process.env.DATABASE_SECRET) {
-    console.warn('❌ Invalid secret in /schemas/find');
-    return res.status(403).json({ error: 'Unauthorized: Invalid Secret' });
-  }
-
   return res.json([
     {
-      id: "@nextwavehostcenter/supabaseexternaldb.WixTest_1",
+      id: "WixTest_1", // ✅ 不能加 namespace
       displayName: "WixTest_1",
       fields: [
         { key: "_id", type: "text", isPrimary: true },
