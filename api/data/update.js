@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { verifyRequestToken } from '../../lib/verifyJwt';
+import { verifyRequestToken } from '../../lib/verifyJwt.js';
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
