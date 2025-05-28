@@ -5,7 +5,8 @@ export default async function handler(req, res) {
         insert: true,
         update: true,
         delete: true,
-        count: true
+        count: true,
+        read: true
       }
     });
   }
