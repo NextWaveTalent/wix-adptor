@@ -1,8 +1,8 @@
 {
-  "builds": [
-    { "src": "src/server.js", "use": "@vercel/node" }
-  ],
   "routes": [
-    { "src": "/plugins-and-webhooks/(.*)", "dest": "/src/server.js" }
+    {
+      "src": "/plugins-and-webhooks/(.*)",
+      "dest": "src/server.js"
+    }
   ]
 }
