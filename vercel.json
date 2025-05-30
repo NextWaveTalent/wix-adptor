@@ -1,8 +1,0 @@
-{
-  "routes": [
-    {
-      "src": "/plugins-and-webhooks/(.*)",
-      "dest": "src/server.js"
-    }
-  ]
-}
