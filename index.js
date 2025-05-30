@@ -30,11 +30,14 @@ const handlers = {
   },
 
   queryDataItems: async ({ request }) => {
-    const { collectionName, paging } = request;
+    const { collectionName, paging = {} } = request;
+    const offset = paging.offset ?? 0;
+    const limit = paging.limit ?? 50;
+    
     const { data, error } = await supabase
-      .from(collectionName)
-      .select('*')
-      .range(paging.offset, paging.offset + paging.limit - 1);
+        .from(collectionName)
+        .select('*')
+        .range(offset, offset + limit - 1);
     if (error) throw new Error(error.message);
     return {
       dataItems: data.map((item) => ({ data: item })),
@@ -64,5 +67,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () =>
   console.log(`🚀 Plugin listening on http://localhost:${PORT}`)
 );
-
-//
