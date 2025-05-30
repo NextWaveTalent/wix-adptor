@@ -1,6 +1,5 @@
-// src/server.js
 import { externalDatabase } from '@wix/data/service-plugins';
-import { handlers } from './handlers.js';
+import { handlers } from '../src/handlers.js'; // <-- 修改路径为上级
 
 const plugin = externalDatabase.provideHandlers(handlers);
 
@@ -8,7 +7,7 @@ export default async function handler(req, res) {
   console.log('📥 Request received:', req.method, req.url);
   try {
     if (req.method === 'POST') {
-      await plugin.process(req, res);  // ⬅️ 正确 await 让响应流写入
+      await plugin.process(req, res);
     } else {
       res.status(405).send('Method Not Allowed');
     }
