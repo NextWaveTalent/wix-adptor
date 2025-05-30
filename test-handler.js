@@ -1,16 +1,14 @@
-// test-server.js
-import express from 'express';
-import handler from './api/plugins-and-webhooks.js';
+import fetch from 'node-fetch';
 
-const app = express();
-app.use(express.json());
+const test = async () => {
+  const res = await fetch('http://localhost:3000/api/plugins-and-webhooks?op=listCollections', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({})
+  });
 
-app.post('/api/plugins-and-webhooks', (req, res) => {
-  // 模拟 Vercel 传给 handler 的参数结构
-  handler(req, res);
-});
+  const json = await res.json();
+  console.log('✅ 测试结果:', JSON.stringify(json, null, 2));
+};
 
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`🚀 Local test server running on http://localhost:${PORT}`);
-});
+test();
