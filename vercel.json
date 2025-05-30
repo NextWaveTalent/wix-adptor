@@ -1,8 +1,8 @@
 {
-  "rewrites": [
+  "routes": [
     {
-      "source": "/plugins-and-webhooks/(.*)",
-      "destination": "/api/handler"
+      "src": "/plugins-and-webhooks/(.*)",
+      "dest": "src/server.js"
     }
   ]
 }
