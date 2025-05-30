@@ -6,38 +6,42 @@ import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 const app = express();
 app.use(bodyParser.json());
 
-// ✅ Supabase 客户端
 const supabase = createSupabaseClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-// ✅ 明确注册 handler 映射
+// ✅ 仅支持 WixTest_1 的 handler 映射
 const handlers = {
   getCapabilities: async () => ({
     supportedFeatures: ['listCollections', 'queryDataItems'],
   }),
 
   listCollections: async () => {
-    const { data, error } = await supabase.rpc('list_tables');
-    if (error) throw new Error(error.message);
     return {
-      collections: data.map((table) => ({
-        name: table,
-        displayName: table,
-      })),
+      collections: [
+        {
+          name: 'WixTest_1',
+          displayName: 'WixTest_1',
+        },
+      ],
     };
   },
 
   queryDataItems: async ({ request }) => {
     const { collectionName, paging = {} } = request;
+    if (collectionName !== 'WixTest_1') {
+      throw new Error(`Unsupported collection: ${collectionName}`);
+    }
+
     const offset = paging.offset ?? 0;
     const limit = paging.limit ?? 50;
 
     const { data, error } = await supabase
-      .from(collectionName)
+      .from('WixTest_1')
       .select('*')
       .range(offset, offset + limit - 1);
+
     if (error) throw new Error(error.message);
     return {
       dataItems: data.map((item) => ({ data: item })),
@@ -45,7 +49,7 @@ const handlers = {
   },
 };
 
-// ✅ v2 路由（保持原有兼容性）
+// ✅ v2 路由（基础调用）
 app.post('/plugins-and-webhooks/:operation', async (req, res) => {
   const operation = req.params.operation;
   const handler = handlers[operation];
@@ -63,16 +67,16 @@ app.post('/plugins-and-webhooks/:operation', async (req, res) => {
   }
 });
 
-// ✅ v3 路由适配（Wix CMS 使用这个路径）
+// ✅ v3 路由（Wix CMS 使用）
 const v3ToHandler = {
   capabilities: 'getCapabilities',
   collections: 'listCollections',
-  items: 'queryDataItems'
+  items: 'queryDataItems',
 };
 
 app.post('/plugins-and-webhooks/v3/:type/:action', async (req, res) => {
   const type = req.params.type;
-  const action = req.params.action; // usually 'get' or 'query'
+  const action = req.params.action;
   const operation = v3ToHandler[type];
 
   if (!operation || !handlers[operation]) {
@@ -97,3 +101,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () =>
   console.log(`🚀 Plugin listening on http://localhost:${PORT}`)
 );
+
